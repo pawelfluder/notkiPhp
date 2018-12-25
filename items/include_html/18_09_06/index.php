@@ -1,0 +1,11 @@
+<html>
+<head>
+	<title>
+	</title>
+</head>
+<body>	
+<?php
+	include('page.html');
+?>
+</body>
+</html>
