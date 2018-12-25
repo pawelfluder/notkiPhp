@@ -1,114 +1,5 @@
 <?php
-	$public = "public_html";
-	$pwd = getcwd();
-	$twoPathParts = explode($public, $pwd);
-	$publicPath = "$twoPathParts[0]$public";
-	
-	$mostCommonFilePath = "$publicPath/items/common/index.php";
-	include "$mostCommonFilePath";
-	//echoVar("mostCommonFilePath", $mostCommonFilePath);
-	
-	CheckIfIndexIsUpToDate();
-	
-	$protectedFilePath = "$publicPath/items/protected.php";
-	include "$protectedFilePath";
-	//echoVar("protectedFilePath", $protectedFilePath);
-	
-	$protectedFilePath = "$publicPath/items/protected.php";
-	include "$protectedFilePath";
-	//echoVar("protectedFilePath", $protectedFilePath);
-	
-	function CheckIfIndexIsUpToDate()
-	{
-		$typeOfIndex = "folder/";
-		
-		$public = "public_html";
-		$pwd = getcwd();
-		$twoPathParts = explode($public, $pwd);
-		$folderPath = "$twoPathParts[0]$public/items/$typeOfIndex";
-		
-		$lastFolderPath = FindLastFolder($folderPath);
-		$lastFolderIndexPath = $lastFolderPath."/index.php";
-		$index = "index.php";
-		$IsUpToDate = identical($lastFolderIndexPath, $index);
-		
-		//echoVar("folderPath", $folderPath);
-		//echoVar("lastFolderIndexPath", $lastFolderIndexPath);
-		//echoVar("pwd/gg.php", "$pwd/gg.php");
-		//echoVar("IsUpToDate", $IsUpToDate);			
-		if ($IsUpToDate)
-		{
-			echo "Index was up to date</br>";
-		}
-		else
-		{
-			echo "Index was updated, because was not up to date</br>";
-			copy($lastFolderIndexPath, "$pwd/index.php");
-		}	
-	}
-	
-	function FindLastFolder($pathToSearch)
-	{
-		//echo "FindLastFolder()</br>";
-		//echo "$pathToSearch</br>";
-		if ($handle = opendir($pathToSearch))
-		{
-			// doputy mamy kolejne pliki lub foldery
-			while (false !== ($fileOrFolderName = readdir($handle))) 
-			{
-				$path = $pathToSearch.$fileOrFolderName;
-				if (is_dir($path))
-				{
-					if (substr($path, -1) != "." 
-						&& substr($path, -2) != "..")
-					{
-						$pathList[] = $path;
-					}			
-				}
-			}
-			
-			sort($pathList);
-			/*for ($i = 0; $i < count($pathList); $i++)
-			{
-				echo "pathList[$i] = $pathList[$i]</br>";
-			}*/
-		}
-		
-		$lastFolderPath = end($pathList);
-		//echoVar("lastFolderPath", $lastFolderPath);
-		
-		return $lastFolderPath;
-	}
-	
-	function identical($fileOne, $fileTwo)
-	{
-		if (filetype($fileOne) !== filetype($fileTwo)) return false;
-		if (filesize($fileOne) !== filesize($fileTwo)) return false;
-	 
-		if (! $fp1 = fopen($fileOne, 'rb')) return false;
-	 
-		if (! $fp2 = fopen($fileTwo, 'rb'))
-		{
-			fclose($fp1);
-			return false;
-		}
-	 
-		$same = true;
-	 
-		while (! feof($fp1) and ! feof($fp2))
-			if (fread($fp1, 4096) !== fread($fp2, 4096))
-			{
-				$same = false;
-				break;
-			}
-	 
-		if (feof($fp1) !== feof($fp2)) $same = false;
-	 
-		fclose($fp1);
-		fclose($fp2);
-	 
-		return $same;
-	}
+	OnStart();
 ?>
 
 <html>
@@ -125,6 +16,29 @@
 </html>
 
 <?php
+function OnStart()
+{
+	$rootPath = GetRootPath();
+	$commonPath = "$rootPath\items\common\common.php";
+	include "$commonPath";
+
+	$typeName = "folder";
+	$lastFolderIndexPath = FindLastFolderIndexPath($typeName, $rootPath);
+	$isUpToDate = IsIndexUpToDate($lastFolderIndexPath);
+
+	EchoUpToDateStatement($isUpToDate);
+	UpdateIndexIfNotUpToDate($isUpToDate, $lastFolderIndexPath);
+}
+
+function GetRootPath()
+{
+	$cwd = getcwd();
+	$pubString = "public_html";
+	$twoPathParts = explode($pubString, $cwd);
+	$rootPath = "$twoPathParts[0]$pubString";
+	return $rootPath;
+}
+
 function CheckIfSaveBtnClicked()
 {
 	if (isset($_POST['przycisk1']))
@@ -276,21 +190,13 @@ function ReadFoldersName()
 			}
 			
 		}
+
+		$len = sizeof($name);
+		closedir($handle);
 		
-		if ($name == null)
-		{
-			$len1 = $i;//echo "długosc: $len1</br>";
-			closedir($handle);
-			
-			sort($name);
-			for ($i = 0; $i < $len1; $i++){
-				echo $name[$i];
-			}
-			return $name[$len1-1];
-		}
-		else
-		{
-			return null;
+		sort($name);
+		for ($i = 0; $i < $len; $i++){
+			echo $name[$i];
 		}
 	}
 }
