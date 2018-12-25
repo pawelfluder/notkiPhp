@@ -69,7 +69,7 @@ function FindAlphabeticallyLastFolder($folderPath)
 	}
 }
 
-function FindLastFolderIndexPath($typeName, $rootPath)
+function FindLastFolderPathForIndex($typeName, $rootPath)
 {
 	$folderPath = "$rootPath\items\\$typeName";
 	
@@ -77,6 +77,19 @@ function FindLastFolderIndexPath($typeName, $rootPath)
 
 	$index = "index.php";
 	$lastFolderIndexPath = "$lastFolderPath\\$index";
+
+	return $lastFolderIndexPath;
+}
+
+function FindLastFolderPathForCommon($typeName, $rootPath)
+{
+	$folderPath = "$rootPath\items\\$typeName";
+	
+	$lastFolderPath = FindAlphabeticallyLastFolder($folderPath);
+
+	$index = "index.php";
+	$typeNameUpper = ucfirst($typeName);
+	$lastFolderIndexPath = "$lastFolderPath\\common$typeNameUpper.php";
 
 	return $lastFolderIndexPath;
 }
