@@ -139,8 +139,25 @@ function str_chop_lines($str, $lines = 4)
 
 function GetTextToSave()
 {
-	$text = $_POST["pole1"];	
-	return $text;
+	//before time change
+	//$time = date("H:i", strtotime('1 hour'));
+	//after time change
+	//$time = date("H:i", strtotime('2 hour'));
+
+	$text = $_POST["pole1"];
+	
+	$tempHourToCheck = date("H", strtotime('1 hour'));//echo "$hour</br>";
+	if ($tempHourToCheck < "6") 
+	{
+		$date = date("d.m.Y", strtotime('- 6 hour'));
+		$time = date("H:i", strtotime('1 hour'));//echo "Before 06:00";
+    } 
+	else
+	{
+		$date = date("d.m.Y");
+		$time = date("H:i", strtotime('1 hour'));//echo "After 06:00";
+	}
+	return "$date;;$text;$time";
 }
 
 function SaveContent($filePath, $textToSave)

@@ -50,26 +50,38 @@ function CheckIfSaveBtnClicked()
 function printPageView()
 {
 	//echo "printPageView()</br>";
-	echo "<form name='formularz1' method='post' action=''>
+	echo "
 		<table>
 			<tr>
 				<b><h2>"
 					.ReadFolderName()
 				."<h2></b>
 			</tr>
-			<tr>
-				<td style='vertical-align: top'>
-					<input type='submit' name='przycisk1' value='zapis1'><br/>
-					<textarea rows='1' cols='69' name='pole1'></textarea>
+			<tr>				
+				<td colspan='2' style='vertical-align: top'>
+					<form name='formularz1' method='post' action=''>
+						<input type='submit' name='przycisk1' value='zapis1'><br/>
+						<textarea rows='1' cols='69' name='pole1'></textarea>
+					</form>
 				</td>
 			</tr>
 			<tr>
-				<td style='vertical-align: top'>";
-					echo ReadFromFile();
-				echo"</td>
-			</tr>
-		</table>
-	</form>";
+				<td valign='top' width='160px'>
+					Dostałem numer w/na: </br>
+					Data: </br>
+					Imię </br>
+					Nazwisko </br>
+					Wiek </br>
+					Numer telefonu </br>
+					Facebook </br>
+					Fb id </br>przed
+				</td>
+				<td valign='top'>";
+					ReadFromFile();
+			echo"</td>
+		</tr>
+		</table>";
+	
 }
 
 function ReadFromFile(){

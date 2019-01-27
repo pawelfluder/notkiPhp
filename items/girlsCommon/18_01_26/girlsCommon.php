@@ -45,63 +45,60 @@ function PrintPageView()
 	</form>";
 }
 
-function CheckIfSaveBtnClicked()
+function CheckIfSaveBtnClicked($rootPath)
 {
 	if (isset($_POST['przycisk1']))
 	{
 		if ($_POST['przycisk1'] == "zapis1"  ) 
 		{
-			WriteToFile();
+			WriteToFile($rootPath);
 		}
 	}
 }
 
 function WriteToFile()
 {
+	
 	$public = "public_html";
 	$pwd = getcwd();
 	$twoPathParts = explode($public, $pwd);
-	$publicPath = "$twoPathParts[0]$public";
-	$itemsPath = "";
-	
-	$textItemPath = "$publicPath/items/text/";
-	$folderItemPath = "$publicPath/items/folder/";
-	
-	$postType = $_POST["select1"];
-	if ($postType == 'text')
+	$src = "$twoPathParts[0]$public/items/templates/girls/";
+
+	$num = intval(LastFileNumber())+1;
+	if ($num < 10)
 	{
-		$directory = $textItemPath;
-	}
-	if ($postType == 'folder')
-	{
-		$directory = $folderItemPath;
-	}
+		$num = "0$num";
+	}//echo "$num</br>";
+		
+	//mkdir("$num", 0777);
+	copy_directory($src, "$num");
 	
-	echoVar("textItemPath", $textItemPath);
-	echoVar("folderItemPath", $folderItemPath);
-	
-	$postTextArea = $_POST["pole1"];
-	
-	if ($postTextArea != "")
-	{
-		$num = intval(LastFileNumber())+1;	
-		if ($num < 10)
-		{
-			$num = "0$num";
-		}//echo $num;
-		
-		mkdir("$num", 0777);
-		
-		copy_directory($directory, "$num");
-		
-		$filename = "$num/nazwa.txt";
-		if(file_exists($filename)){
-			$file = fopen($filename,"a+");
-			fwrite($file, $postTextArea);
-			fclose($file);
-		}
-		
-		header("Refresh:0");
+	$post = $_POST["pole1"];
+	$filename = "$num/nazwa.txt";
+	if(file_exists($filename)){
+		$file = fopen($filename,"a+");
+		fwrite($file, $post);
+		fclose($file);
 	}
+	header("Refresh:0");
 }
+
+function CreateNameFile($num, $name)
+{
+	$filePath = "$num\\nazwa.txt";
+	$myfile = fopen($filePath, "w");
+	fwrite($myfile, $name);
+	fclose($myfile);
+}
+
+function CreateListFile($num)
+{
+	$filePath = "$num\\lista.txt";
+	$myfile = fopen($filePath, "w");
+	fwrite($myfile, "\n\n\n\n");
+	fclose($myfile);
+}
+
+
+
 ?>

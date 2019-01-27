@@ -20,6 +20,61 @@ function echoVar($name, $var)
 	}
 }
 
+function UpdateIndexIfNotUpToDate($isUpToDate, $lastFolderIndexPath)
+{
+	if ($isUpToDate == false)
+	{
+		$cwd = getcwd();
+		$indexPhpString = "index.php";
+		copy($lastFolderIndexPath, "$cwd\\$indexPhpString");
+	}
+}
+
+function CheckPasswordAndPrintPageView()
+{
+	//echo "CheckPasswordAndPrintPageView()</br>";
+	//start sesji
+		session_start();
+	//hasło sesji
+		if(isset($_SESSION['session_pass']))
+		{
+			$sessionPass = $_SESSION['session_pass'];
+		}
+		else
+		{
+			$sessionPass = "";
+		}
+	//haslo wpisane do textbox'a
+		if(isset($_POST['pass']))
+		{
+			$passTypedToTextBox = $_POST['pass'];
+		}
+		else
+		{
+			$passTypedToTextBox = "";
+		}
+	//wpisywanie haslo z textbox do sesji
+		if ($passTypedToTextBox)
+		{
+			echoVar("passTypedToTextBox",$passTypedToTextBox);
+			$_SESSION['session_pass'] = $passTypedToTextBox;
+			header("Refresh:0");
+		}
+	//sprawdzenia hasła
+		$hardcodedPassword = "66071805";
+		$isPasswordCorrect = ($hardcodedPassword == $sessionPass);
+
+	//wyswietlenie formularza z haslem lub strony
+	if ($isPasswordCorrect == true)
+	{
+		PrintPageView();
+	}
+	else
+	{
+		PrintPasswordForm();
+	}
+}
+
 function IsCurrentDirectoryPointer($path)
 {
 	return $path == ".";
@@ -75,21 +130,18 @@ function FindLastFolderPathForIndex($typeName, $rootPath)
 	
 	$lastFolderPath = FindAlphabeticallyLastFolder($folderPath);
 
-	$index = "index.php";
-	$lastFolderIndexPath = "$lastFolderPath\\$index";
+	$lastFolderIndexPath = "$lastFolderPath";
 
 	return $lastFolderIndexPath;
 }
 
 function FindLastFolderPathForCommon($typeName, $rootPath)
 {
-	$folderPath = "$rootPath\items\\$typeName";
+	$folderPath = "$rootPath\items\\$typeName"."Common";
 	
 	$lastFolderPath = FindAlphabeticallyLastFolder($folderPath);
-
-	$index = "index.php";
-	$typeNameUpper = ucfirst($typeName);
-	$lastFolderIndexPath = "$lastFolderPath\\common$typeNameUpper.php";
+	
+	$lastFolderIndexPath = "$lastFolderPath\\$typeName"."Common.php";
 
 	return $lastFolderIndexPath;
 }
@@ -172,7 +224,11 @@ function ReadFoldersName()
 		while (false !== ($nam0 = readdir($handle))) 
 		{
 			$filename = "$nam0/nazwa.txt";
-			if(file_exists($filename))
+			if(IsCurrentDirectoryPointer($nam0) == false &&
+				IsCurrentDirectoryPointer($nam0) == false &&
+				IsPreviousDirectoryPointer($nam0) == false &&
+				IsHiddenFileOrFolder($nam0) == false &&
+				file_exists($filename))
 			{
 				$file = fopen($filename, "r");
 				$size = filesize($filename);
@@ -258,7 +314,7 @@ function copy_directory($src,$dst) {
     while(false !== ( $file = readdir($dir)) ) { 
         if (( $file != '.' ) && ( $file != '..' )) { 
             if ( is_dir($src . '/' . $file) ) { 
-                recurse_copy($src . '/' . $file,$dst . '/' . $file); 
+                copy_directory($src . '/' . $file,$dst . '/' . $file); 
             } 
             else { 
                 copy($src . '/' . $file,$dst . '/' . $file); 
