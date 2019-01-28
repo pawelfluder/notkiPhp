@@ -50,21 +50,7 @@ function CheckIfSaveBtnClicked($rootPath)
 
 function WriteToFile($rootPath)
 {
-	$textTypeName = "text";	
-	$textItemPath = FindLastFolderPathForIndex($textTypeName, $rootPath);
-	
-	$folderTypeName = "folder";
-	$folderItemPath = FindLastFolderPathForIndex($folderTypeName, $rootPath);
-	
-	$postType = $_POST["select1"];
-	if ($postType == 'text')
-	{
-		$directory = $textItemPath;
-	}
-	if ($postType == 'folder')
-	{
-		$directory = $folderItemPath;
-	}
+	$directory = FindLastFolderPathForTemplate("folderForPdf", $rootPath);
 	
 	$postTextArea = $_POST["pole1"];
 	
@@ -76,21 +62,8 @@ function WriteToFile($rootPath)
 			$num = "0$num";
 		}//echo $num;
 		
-		copy_directory($directory, "$num");
-		
-		$filename = "$num/nazwa.txt";
-		if(file_exists($filename))
-		{
-			$file = fopen($filename,"a+");
-			fwrite($file, $postTextArea);
-			fclose($file);
-		}
-		
+		copy_directory($directory, "$num");		
 		CreateNameFile($num, $postTextArea);
-		if ($postType == 'text')
-		{
-			CreateListFile($num);
-		}
 		
 		header("Refresh:0");
 	}	

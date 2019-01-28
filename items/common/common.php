@@ -20,6 +20,14 @@ function echoVar($name, $var)
 	}
 }
 
+function PrintPasswordForm()
+{
+	echo "<form method=post>
+			<input type='password' name='pass'></br>
+			<input type='submit' value='Zaloguj'>
+		</form>";
+}
+
 function UpdateIndexIfNotUpToDate($isUpToDate, $lastFolderIndexPath)
 {
 	if ($isUpToDate == false)
@@ -146,7 +154,12 @@ function FindLastFolderPathForCommon($typeName, $rootPath)
 	return $lastFolderIndexPath;
 }
 
+function FindLastFolderPathForTemplate($typeName, $rootPath)
+{
+	$templatePath = "$rootPath\items\\templates\\$typeName";
 
+	return $templatePath;
+}
 
 function EchoUpToDateStatement($isUpToDate)
 {

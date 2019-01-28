@@ -1,12 +1,4 @@
-<?php	
-
-function PrintPasswordForm()
-{
-	echo "<form method=post>
-			<input type='password' name='pass'></br>
-			<input type='submit' value='Zaloguj'>
-		</form>";
-}
+<?php
 
 function PrintPageView()
 {
