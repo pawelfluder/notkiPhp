@@ -61,7 +61,6 @@ function printPageView()
 			<tr>
 				<td style='vertical-align: top'>
 					<input type='submit' name='przycisk1' value='zapis1'><br/>
-					<textarea rows='1' cols='69' name='pole1'></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -140,8 +139,21 @@ function str_chop_lines($str, $lines = 4)
 
 function GetTextToSave()
 {
-	$text = $_POST["pole1"];	
-	return $text;
+	$hour = date("H", strtotime('1 hour'));//echo "$hour</br>";
+	if ($hour < "6") 
+	{
+		$date = date("d.m.Y", strtotime('- 6 hour'));
+		//echo "Before 06:00";
+    } 
+	else
+	{
+		$date = date("d.m.Y");
+		//echo "After 06:00";
+	}	
+	//$time = date("H:i", strtotime('1 hour'));
+	$time = date("H:i", strtotime('2 hour'));	
+	
+	return "$date;$time";
 }
 
 function SaveContent($filePath, $textToSave)
